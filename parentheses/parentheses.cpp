@@ -69,4 +69,5 @@ string solution(string p) {
 
 int main() {
     cout << solution(string("())("));
+    while (1) { }
 }
