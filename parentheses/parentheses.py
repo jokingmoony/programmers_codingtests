@@ -1,3 +1,6 @@
+# https://programmers.co.kr/learn/courses/30/lessons/60058?language=cpp
+
+
 def split_parentheses(p):
     split_index = 0
     r = 0
