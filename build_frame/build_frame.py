@@ -118,5 +118,4 @@ def solution(n, build_frame):
                 remove_floor(constructed, frame[0], frame[1], n)
 
     constructed = sorted(constructed)
-    
     return constructed
