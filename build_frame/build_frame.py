@@ -64,6 +64,7 @@ def remove_pillar(constructed, x, y, n):
         return
     elif y >= n or y < 0:
         return
+		
     try:
         constructed.remove([x, y, 0])
     except:
