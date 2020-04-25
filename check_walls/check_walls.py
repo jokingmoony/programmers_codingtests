@@ -7,10 +7,11 @@ def dfs(n, depth, weak, dist):
     global answer
     if len(dist) == 0:
         return
+    dist = copy.deepcopy(dist)
     checker = dist.pop(0)
-    
+
     for weak_point in weak:
-        checked_walls = list(map(lambda x : x % n, list(range(weak_point, checker + weak_point + 1))))
+        checked_walls = map(lambda x : x % n, list(range(weak_point, checker + weak_point + 1)))
         walls = copy.deepcopy(weak)
 #         print(f'{checker}, {walls}')
         for wall in checked_walls:
@@ -20,7 +21,9 @@ def dfs(n, depth, weak, dist):
 #             print(checked_walls, checker)
             if answer > depth:
                 answer = depth
-        dfs(n, depth + 1, walls, copy.deepcopy(dist))
+            return
+        else:
+            dfs(n, depth + 1, walls, dist)
 
 
 def solution(n, weak, dist):
