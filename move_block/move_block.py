@@ -1,43 +1,57 @@
 # https://programmers.co.kr/learn/courses/30/lessons/60063
+# from https://medium.com/@dltkddud4403/2020-%EC%B9%B4%EC%B9%B4%EC%98%A4-%EB%B8%94%EB%9D%BC%EC%9D%B8%EB%93%9C-%EC%BD%94%EB%94%A9%ED%85%8C%EC%8A%A4%ED%8A%B8-%EB%B8%94%EB%A1%9D-%EC%9D%B4%EB%8F%99%ED%95%98%EA%B8%B0-57d668a744d0
 
-import numpy as np
-from copy import deepcopy
+from collections import deque
 
-def bfs(board, n, machine, visited):
-    machine = deepcopy(machine)
-    
-    visited[machine[0], machine[1], 0] = True
-    visited[machine[2], machine[3], 1] = True
-    
-    if visited[n, n, 0] and visited[n, n, 0]:
-        return
-    
-    
-    
-    bfs(board, n, machine, visited)
-
-
-def make_board(board):
-    n = len(board)
-    new_board = []
-    for i in range(0, n+2):
-        new_row = []
-        for j in range(0, n+2):
-            new_row.append(1)
-        new_board.append(new_row)
-
-    for i in range(1, n+1):
-        for j in range(1, n+1):
-            new_board[i][j] = board[i-1][j-1]
-
-    return new_board
-
+#1초동안 움직일 수 있는 모든 경우
+def move(cor1,cor2,board):
+	move = [(1,0), (0,1), (-1,0), (0,-1)]
+	ret=[]
+	#이동
+	for m in move:
+		if board[cor1[0]+m[0]][cor1[1]+m[1]]==0 and board[cor2[0]+m[0]][cor2[1]+m[1]]==0:
+			ret.append({(cor1[0]+m[0],cor1[1]+m[1]),(cor2[0]+m[0],cor2[1]+m[1])})
+	
+	rotate=[1,-1]
+	#가로회전
+	if cor1[0]==cor2[0]:
+		for r in rotate:
+			if board[cor1[0]+r][cor1[1]]==0 and board[cor2[0]+r][cor2[1]]==0:
+				ret.append({(cor1[0]+r,cor1[1]),(cor1[0],cor1[1])})
+				ret.append({(cor2[0]+r,cor2[1]),(cor2[0],cor2[1])})
+	#세로회전
+	else:
+		for r in rotate:
+			if board[cor1[0]][cor1[1]+r]==0 and board[cor2[0]][cor2[1]+r]==0:
+				ret.append({(cor1[0],cor1[1]),(cor1[0],cor1[1]+r)})
+				ret.append({(cor2[0],cor2[1]),(cor2[0],cor2[1]+r)})
+	return ret
 
 def solution(board):
-    board = make_board(board)    
-    visited = np.full((n+2, n+2, 2), False)
-    machine = [0, 0, 1, 1]
-    bfs(board, len(board), machine, visited)
-    
-    answer = 0
-    return answer
+	size = len(board)
+	#경계 체크 쉽게하기 위해서 지도의 상하좌우에 1 추가
+	new_board = [[1 for i in range(len(board)+2)] for i in range(len(board)+2)]
+	for i in range(len(board)):
+		for j in range(len(board)):
+			new_board[i+1][j+1] = board[i][j]
+
+	que = deque()
+	visited = []
+
+	#queue에 [로봇의 좌표정보, 지금까지 거리] 형태로 넣음
+	que.append([{(1,1),(1,2)},0])
+	visited.append({(1,1),(1,2)})
+
+	while len(que)!=0:
+		temp = que.popleft()
+		cor = list(temp[0])
+		dist = temp[1]+1
+
+		for m in move(cor[0],cor[1],new_board):
+			if (size,size) in m: return dist
+
+			if not m in visited:
+				que.append([m,dist])
+				visited.append(m)
+
+	return 0
