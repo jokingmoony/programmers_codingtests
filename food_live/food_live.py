@@ -1,44 +1,28 @@
 # https://programmers.co.kr/learn/courses/30/lessons/42891
-from collections import deque
-
-
 def solution(food_times, k):
     
     n = len(food_times)
-    foods = deque()
-    food_number = 0
-    
-    times = int(k / n)
-    offset = k % n
-    
-    for index, food in enumerate(food_times):
-        foods.append([index + 1, food])
-        
-    while True:
-        foods = deque(map(lambda x : [x[0], x[1] - times], foods))
-
-        rest = -1 * sum(map(lambda x : x[1], list(filter(lambda x : x[1] < 0, foods))))
-        foods = deque(filter(lambda x : x[1] > 0, foods))
-
-        n = len(foods)
-        
-        if n == 0:
-            return -1
-        if rest == 0:
+    foods = sorted([[index, time] for index, time in enumerate(food_times)], key=lambda x: x[1])
+    start = 0
+    l = 0
+    for _, time in foods:
+        if k - n * (time - l) < 0:
             break
         
-        times = int(rest / n)
+        start += 1
+        k -= n * (time - l)
+        l += time - l
+        n -= 1
         
-    while offset > 0:
-        if len(foods) == 0:
-            return -1
-        food_number, food_time = foods.popleft()
-        food_time -= 1
-        if food_time != 0:
-            foods.append((food_number, food_time))
-        offset -= 1
-
-    if len(foods) == 0:
+    if n == 0:
         return -1
-    return foods[0][0]
+    
+    foods = sorted(foods[start:], key=lambda x:x[0])
+    k %= n
+    
+    try:
+        answer = foods[k][0] + 1
+    except:
+        return -1
+    return answer
     
