@@ -2,12 +2,6 @@
 
 import re
 
-def swap(x, y):
-    tmp = x
-    
-    x = y
-    y = x
-
 def solution(files):
     answer = []
     for file in files:
