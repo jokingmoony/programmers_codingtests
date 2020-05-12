@@ -3,44 +3,35 @@
 def solution(n, t, m, timetable):
     answer = ''
     
-    
-    ret = []
+    times = []
     start = int('09') * 60
+    
     for time in timetable:
         hh, mm = time.split(":")
-        ret.append(int(hh) * 60 + int(mm))
-    ret.sort()
+        times.append(int(hh) * 60 + int(mm))
+    times.sort()
     
-    tmp = dict()
-    p = 0
+    bus_crew_dict = dict()
+    
+    crew_id = 0
     buses = [start + (i * t) for i in range(n)]
-    for bus in buses:
-        tmp[bus] = []
-        cnt = 0
-        for j in range(p, len(ret)):
-            if ret[j] <= bus and cnt < m:
-                p += 1
-                cnt += 1
-                tmp[bus].insert(0, ret[j])
     
-    print(tmp)
-    buses.sort(reverse=True)
     for bus in buses:
-        if len(tmp[bus]) < m:
-            if answer == '':
-                answer = bus
-            elif answer < bus:
-                answer = bus
-            break
-        else:
-            answer = tmp[bus][0] - 1
-            break
+        bus_crew_dict[bus] = []
+        crew_cnt = 0
+        for j in range(crew_id, len(times)):
+            if times[j] <= bus and crew_cnt < m:
+                crew_id += 1
+                crew_cnt += 1
+                bus_crew_dict[bus].insert(0, times[j])
     
-    if answer == '':
-        min_time = ret[0]
-        answer = min_time - 1
-        
-        
+    last_bus = buses[-1]
+    
+    if len(bus_crew_dict[last_bus]) < m:
+        answer = bus
+    else:
+        answer = bus_crew_dict[last_bus][0] - 1
+
     hh = answer // 60
     mm = answer % 60
     answer = f'{hh:02d}:{mm:02d}'
