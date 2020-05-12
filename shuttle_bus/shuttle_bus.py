@@ -22,22 +22,20 @@ def solution(n, t, m, timetable):
                 p += 1
                 cnt += 1
                 tmp[bus].insert(0, ret[j])
-#                 print(bus, ret[j])
     
-    
+    print(tmp)
     buses.sort(reverse=True)
     for bus in buses:
         if len(tmp[bus]) < m:
-            answer = bus
+            if answer == '':
+                answer = bus
+            elif answer < bus:
+                answer = bus
             break
         else:
-            s = set(tmp[bus])
-            if len(s) == 1:
-                continue
-            else:
-                answer = list(s)[-2]
-                break
-       
+            answer = tmp[bus][0] - 1
+            break
+    
     if answer == '':
         min_time = ret[0]
         answer = min_time - 1
@@ -46,6 +44,5 @@ def solution(n, t, m, timetable):
     hh = answer // 60
     mm = answer % 60
     answer = f'{hh:02d}:{mm:02d}'
-#     print(tmp)
     
     return answer
