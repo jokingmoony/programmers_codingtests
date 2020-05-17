@@ -1,18 +1,23 @@
 # https://programmers.co.kr/learn/courses/30/lessons/64063
 
+def b_search(arr, start, end, n):
+    i = (start + end) // 2
+    if arr[i] == n or start >= end:
+        return i
+    elif arr[i] > n:
+        return b_search(arr, start, i - 1, n)
+    else:
+        return b_search(arr, i + 1, end, n)
+
 def solution(k, room_number):
     answer = []
-    rooms = {i:i+1 for i in range(0, k+2)}
+    rooms = [i for i in range(k+1)]
     for req in room_number:
-        if rooms[req] == req+1:
-            answer.append(req)
-            rooms[req] = rooms[req-1]
-            rooms[req] = rooms[req+1]
+        index = b_search(rooms, 0, len(rooms)-1, req)
+        if rooms[index] < req:
+            room = rooms[index+1]
         else:
-            cur = req
-            while rooms[cur] != cur + 1:
-                cur += 1
-            answer.append(cur)
-            rooms[cur] = rooms[cur-1]
-            rooms[cur] = rooms[cur+1]
+            room = rooms[index]
+        answer.append(room)
+        rooms.remove(room)
     return answer
