@@ -1,23 +1,19 @@
 # https://programmers.co.kr/learn/courses/30/lessons/64063
 
-def b_search(arr, start, end, n):
-    i = (start + end) // 2
-    if arr[i] == n or start >= end:
-        return i
-    elif arr[i] > n:
-        return b_search(arr, start, i - 1, n)
-    else:
-        return b_search(arr, i + 1, end, n)
+import sys
+sys.setrecursionlimit(10**6) 
+
+def find_next_room(m, room):
+    if room not in m:
+        m[room] = room + 1
+        return room
+    m[room] = find_next_room(m, m[room])
+    return m[room]
 
 def solution(k, room_number):
     answer = []
-    rooms = [i for i in range(k+1)]
-    for req in room_number:
-        index = b_search(rooms, 0, len(rooms)-1, req)
-        if rooms[index] < req:
-            room = rooms[index+1]
-        else:
-            room = rooms[index]
-        answer.append(room)
-        rooms.remove(room)
+    m = dict()
+    for room in room_number:
+        next_room = find_next_room(m, room)
+        answer.append(next_room)
     return answer
