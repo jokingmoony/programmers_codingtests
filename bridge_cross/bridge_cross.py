@@ -1,21 +1,28 @@
 # https://programmers.co.kr/learn/courses/30/lessons/64062
 
-def solution(stones, k):
-    answer = 0
-    stones_sorted = sorted(stones)
+def bsearch(stones, start, end, k):
+    res = 0
     
-    appended = 0
-    for min_stone in stones_sorted:
-        min_stone -= appended
-        appended += min_stone
+    while start <= end:
+        mid = (start + end) // 2
         cnt = 0
-        for i, stone in enumerate(stones):
-            if stone == 0:
+        for stone in stones:
+            if stone - mid <= 0:
                 cnt += 1
+            elif cnt >= k:
+                break
             else:
                 cnt = 0
-                stones[i] -= min_stone
-            if cnt >= k:
-                return answer
-        answer += min_stone
-    return answer
+        
+        if cnt >= k:
+            end = mid - 1
+        else:
+            start = mid + 1
+        
+    res = start
+    return res
+    
+
+def solution(stones, k):
+    
+    return bsearch(stones, 0, max(stones), k)
