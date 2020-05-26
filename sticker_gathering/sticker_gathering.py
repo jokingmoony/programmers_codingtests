@@ -5,28 +5,27 @@ def solution(sticker):
     answer = 0
     
     n = len(sticker)
-    visited = [0 for _ in range(n)]
+    if n == 1:
+        return sticker[0]
     
-    arr = [(v, i) for i, v in enumerate(sticker)]
+    dp = [0 for _ in range(n)]
+    dp[0] = sticker[0]
+    dp[1] = sticker[0]
     
-    arr.sort(reverse=True)
+    for i in range(2, n-1):
+        dp[i] = max(dp[i-2] + sticker[i], dp[i-1])
+    
+    answer = dp[-2]
     
     for i in range(n):
-        cost = 0
-        for j in range(i, n):
-            v, i = arr[j]
-            if not visited[i]:
-                visited[i-1] = True
-                visited[i] = True
-                visited[(i+1)%n] = True
-                cost += v
-            else:
-                if cost < answer:
-                    break
-                else:
-                    answer = cost
-        for j in range(n):
-            visited[j] = False
-            
-
+        dp[i] = 0
+    
+    dp[0] = 0
+    dp[1] = sticker[1]
+    
+    for i in range(2, n):
+        dp[i] = max(dp[i-2] + sticker[i], dp[i-1])
+        
+    answer = max(answer, dp[-1])
+    
     return answer
