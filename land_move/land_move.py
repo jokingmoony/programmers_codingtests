@@ -1,4 +1,5 @@
 # https://programmers.co.kr/learn/courses/30/lessons/62050?language=python3
+
 import sys
 import math
 sys.setrecursionlimit(100000)
@@ -21,14 +22,17 @@ def dfs(i, j, area, visited, land, height):
                 dfs(nx, ny, area, visited, land, height)
 
 def find(a, dset):
-    while (a != dset[a-1]):
-        a = dset[a-1];
+    while (a != dset[a]):
+        a = dset[a]
     return a
 
-def union(a, b, dset):
+def union(a, b, dset, size):
     a = find(a, dset)
     b = find(b, dset)
-    dset[a-1] = b
+    if (size[a] < size[b]):
+        a, b = b, a
+    size[a] += size[b]
+    dset[b] = a
                 
 def solution(land, height):
     answer = 0
@@ -42,9 +46,9 @@ def solution(land, height):
             if not visited[i][j]:
                 area_num += 1
                 dfs(i, j, area_num, visited, land, height)
-#     print(visited)
 
-    disjoint_set = [i for i in range(1, area_num + 1)]
+    disjoint_set = [i for i in range(area_num + 1)]
+    size = [1 for _ in range(area_num + 1)]
 
     ladder_arr = []
     
@@ -66,7 +70,7 @@ def solution(land, height):
         if cnt + 1 == area_num:
             break
         if find(s1, disjoint_set) != find(s2, disjoint_set):
-            union(s1, s2, disjoint_set)
+            union(s1, s2, disjoint_set, size)
             answer += val
             cnt+=1
 
