@@ -1,20 +1,12 @@
 # https://programmers.co.kr/learn/courses/30/lessons/12983
-
+# reference: https://whilescape.tistory.com/entry/Algorithm-programmerskakao2017%ED%8C%81%EC%8A%A4%ED%83%80%EC%9A%B4level4%EB%8B%A8%EC%96%B4-%ED%8D%BC%EC%A6%90
 def solution(strs, t):
-    n = len(t)
-    dp = [float('inf') for _ in range(n)]
-    for i in range(1, n+1):
-        for word in strs:
-            l = len(word)
-            if l > i:
-                continue
-            if word == t[i-l:i]:
-                if i - l == 0:
-                    dp[i-1] = 1
-                    continue
-                dp[i-1] = min(dp[i-1], dp[i-l-1]+1)
+    dp = {}
+    for i in range(len(t)):
+        dp[i] = float('inf')
     
-    answer = dp[n-1]
-    if answer == float('inf'):
-        return -1
-    return answer
+    for i in range(len(t) -1, -1, -1):
+        for k in range(1, 6):
+            if t[i:i+k] in strs:
+                dp[i] = min(dp.get(i), dp.get(i+k, 0)+1)
+    return dp.get(0) if dp.get(0) != float('inf') else -1
